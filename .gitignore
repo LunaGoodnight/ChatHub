@@ -38,10 +38,6 @@ logs/
 appsettings*.json
 appsettings*.Development.json
 
-# Ignore publish outputs
-wwwroot/
-wwwroot/*
-
 # Ignore npm packages (if any)
 node_modules/
 package-lock.json
@@ -55,5 +51,4 @@ Thumbs.db
 ehthumbs.db
 Desktop.ini
 $RECYCLE.BIN/
-
 
