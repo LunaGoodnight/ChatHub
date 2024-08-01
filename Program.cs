@@ -27,8 +27,11 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseCors();
 
-
+app.UseStaticFiles(); // Serve static files from wwwroot
 
 app.MapHub<ChatApp.Hubs.ChatHub>("/chathub");
+
+// Serve the default file (index.html) for all other routes
+app.MapFallbackToFile("index.html");
 
 app.Run();
