@@ -1,37 +1,57 @@
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Add services to the container
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSignalR();
-builder.Services.AddCors(options =>
+builder.Services.AddControllers();
+// Configure CORS based on environment
+if (builder.Environment.IsDevelopment())
 {
-    options.AddDefaultPolicy(policy =>
+    builder.Services.AddCors(options =>
     {
-        policy.WithOrigins("http://localhost:3000")
-            .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials();
+        options.AddDefaultPolicy(policy =>
+        {
+            policy.WithOrigins("http://localhost:3000")
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowCredentials();
+        });
     });
-});
+}
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseCors(); // Enable CORS only in development
+}
+else
+{
+    app.UseExceptionHandler("/Error");
+    app.UseHsts();
 }
 
 app.UseHttpsRedirection();
-app.UseCors();
-
 app.UseStaticFiles(); // Serve static files from wwwroot
-
+app.UseRouting();
+app.MapControllers();
 app.MapHub<ChatApp.Hubs.ChatHub>("/chathub");
 
-// Serve the default file (index.html) for all other routes
-app.MapFallbackToFile("index.html");
+// Handle SPA routing in production
+if (!app.Environment.IsDevelopment())
+{
+    app.MapFallbackToFile("index.html");
+}
+
+// Optional: Add basic logging to help diagnose issues
+app.Use(async (context, next) =>
+{
+    app.Logger.LogInformation($"Request Path: {context.Request.Path}");
+    await next();
+});
 
 app.Run();
