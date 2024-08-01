@@ -1,0 +1,59 @@
+# Ignore build outputs
+bin/
+obj/
+out/
+
+# Ignore user-specific files
+.vscode/
+.vscode/*
+
+# Ignore Rider-specific files
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Ignore logs
+*.log
+logs/
+
+# Ignore NuGet packages
+*.nupkg
+*.snupkg
+
+# Ignore compiled DLLs
+*.dll
+*.exe
+*.pdb
+*.mdb
+
+# Ignore build artifacts
+*.log
+*.lock.json
+*.cache
+*.tmp
+
+# Ignore configuration files
+appsettings*.json
+appsettings*.Development.json
+
+# Ignore publish outputs
+wwwroot/
+wwwroot/*
+
+# Ignore npm packages (if any)
+node_modules/
+package-lock.json
+yarn.lock
+
+# Ignore macOS specific files
+.DS_Store
+
+# Ignore Windows specific files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+
