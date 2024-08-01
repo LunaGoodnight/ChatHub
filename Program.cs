@@ -5,6 +5,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSignalR();
 builder.Services.AddControllers();
+
 // Configure CORS based on environment
 if (builder.Environment.IsDevelopment())
 {
@@ -47,11 +48,13 @@ if (!app.Environment.IsDevelopment())
     app.MapFallbackToFile("index.html");
 }
 
-// Optional: Add basic logging to help diagnose issues
+// Add detailed logging to diagnose issues
 app.Use(async (context, next) =>
 {
     app.Logger.LogInformation($"Request Path: {context.Request.Path}");
+    app.Logger.LogInformation($"Request QueryString: {context.Request.QueryString}");
     await next();
+    app.Logger.LogInformation($"Response Status Code: {context.Response.StatusCode}");
 });
 
 app.Run();
