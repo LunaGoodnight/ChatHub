@@ -17,9 +17,15 @@ public class ChatController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<ChatMessage>>> GetMessages()
+    public async Task<ActionResult<IEnumerable<ChatMessage>>> GetMessages(int pageNumber = 1, int pageSize = 20)
     {
-        return await _context.ChatMessages.OrderByDescending(m => m.Timestamp).ToListAsync();
+        var messages = await _context.ChatMessages
+            .OrderByDescending(m => m.Timestamp)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return messages;
     }
 
 }
