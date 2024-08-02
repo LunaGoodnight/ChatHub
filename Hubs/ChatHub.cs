@@ -13,18 +13,19 @@ public class ChatHub : Hub
     {
         _context = context;
     }
-    public async Task SendMessage(string user, string message)
+    public async Task SendMessage(string user, string message, string avatar)
     {
         var chatMessage = new ChatMessage
         {
             User = user,
             Message = message,
-            Timestamp = DateTime.Now
+            Avatar = avatar,
+            Timestamp = DateTime.UtcNow // Set the timestamp on the server
         };
 
         _context.ChatMessages.Add(chatMessage);
         await _context.SaveChangesAsync();
 
-        await Clients.All.SendAsync("ReceiveMessage", user, message);
+        await Clients.All.SendAsync("ReceiveMessage", user, message, avatar, chatMessage.Timestamp);
     }
 }
