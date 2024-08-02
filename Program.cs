@@ -12,7 +12,7 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<ChatContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Configure CORS based on environment
+// Configure CORS
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
@@ -25,14 +25,14 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+
+// Enable Swagger for both development and production environments
 app.UseSwagger();
 app.UseSwaggerUI();
-app.UseCors(); // Enable CORS only in development
 
+app.UseCors(); 
 app.UseExceptionHandler("/Error");
 app.UseHsts();
-
-
 app.UseHttpsRedirection();
 app.UseStaticFiles(); // Serve static files from wwwroot
 app.UseRouting();
