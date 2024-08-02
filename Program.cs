@@ -1,3 +1,7 @@
+using ChatApp.Data;
+using ChatApp.Hubs;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
@@ -5,42 +9,35 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSignalR();
 builder.Services.AddControllers();
+builder.Services.AddDbContext<ChatContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Configure CORS based on environment
-if (builder.Environment.IsDevelopment())
+builder.Services.AddCors(options =>
 {
-    builder.Services.AddCors(options =>
+    options.AddDefaultPolicy(policy =>
     {
-        options.AddDefaultPolicy(policy =>
-        {
-            policy.WithOrigins("http://localhost:3000")
-                .AllowAnyHeader()
-                .AllowAnyMethod()
-                .AllowCredentials();
-        });
+        policy.WithOrigins("http://localhost:3000")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
     });
-}
+});
 
 var app = builder.Build();
+app.UseSwagger();
+app.UseSwaggerUI();
+app.UseCors(); // Enable CORS only in development
 
-// Configure the HTTP request pipeline
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-    app.UseCors(); // Enable CORS only in development
-}
-else
-{
-    app.UseExceptionHandler("/Error");
-    app.UseHsts();
-}
+app.UseExceptionHandler("/Error");
+app.UseHsts();
+
 
 app.UseHttpsRedirection();
 app.UseStaticFiles(); // Serve static files from wwwroot
 app.UseRouting();
 app.MapControllers();
-app.MapHub<ChatApp.Hubs.ChatHub>("/chathub");
+app.MapHub<ChatHub>("/chathub");
 
 // Handle SPA routing in production
 if (!app.Environment.IsDevelopment())
