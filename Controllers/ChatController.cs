@@ -17,10 +17,10 @@ public class ChatController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<ChatMessage>>> GetMessages(int pageNumber = 1, int pageSize = 20)
+    public async Task<ActionResult<IEnumerable<ChatMessage>>> GetMessages(int pageNumber = 1, int pageSize = 40)
     {
         var messages = await _context.ChatMessages
-            .OrderBy(m => m.Timestamp) // Ensure messages are sorted by timestamp in ascending order
+            .OrderByDescending(m => m.Timestamp) // Ensure messages are sorted by timestamp in descending order
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();
