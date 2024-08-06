@@ -21,12 +21,12 @@ public class ChatHub : Hub
             Message = message,
             Avatar = avatar,
             Timestamp = DateTime.UtcNow, // Set the timestamp on the server
-            ImageUrl = imageUrl // Add this line
+            ImageUrl = imageUrl 
         };
 
         _context.ChatMessages.Add(chatMessage);
         await _context.SaveChangesAsync();
 
-        await Clients.All.SendAsync("ReceiveMessage", user, message, avatar, chatMessage.TimestampUnix, imageUrl);
+        await Clients.All.SendAsync("ReceiveMessage", user, message, avatar, chatMessage.Timestamp, imageUrl);
     }
 }
